@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kiniun1/novo-geo/issues"
   },
-  "homepage": "https://github.com/kiniun1/novo-geo#readme"
+  "homepage": "https://github.com/kiniun1/novo-geo#readme",
+  "devDependencies": {
+    "standard": "^16.0.3"
+  }
 }
