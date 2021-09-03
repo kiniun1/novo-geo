@@ -10,6 +10,17 @@
     "type": "git",
     "url": "git+https://github.com/kiniun1/novo-geo.git"
   },
+  "lint-staged": {
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "author": "",
   "license": "ISC",
   "bugs": {
