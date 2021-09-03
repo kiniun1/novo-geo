@@ -1,13 +1,7 @@
 class RevGeocodingRouter {
     route (httpRequest) {
-        if (!httpRequest.body.latitude) {
+        if (!httpRequest.body.latitude || !httpRequest.body.longitude) {
             return {
-                statusCode: 400
-            }
-        }
-
-        if (!httpRequest.body.longitude) {
-            return{
                 statusCode: 400
             }
         }
@@ -29,7 +23,7 @@ describe('RevGeocoding Router', () => {
 })
 
 describe('RevGeocoding Router', () => {
-    test('Deve retornar 400 se nenhuma latitude for fornecida.', () => {
+    test('Deve retornar 400 se nenhuma longitude for fornecida.', () => {
         const sut = new RevGeocodingRouter()
         const httpRequest = {
             body: {
