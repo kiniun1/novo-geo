@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/kiniun1/novo-geo#readme",
   "devDependencies": {
+    "lint-staged": "^11.1.2",
     "standard": "^16.0.3"
   }
 }
