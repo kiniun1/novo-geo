@@ -46,8 +46,7 @@ class MissingParamError extends Error {
         super(`Missing param: ${paramName}`)
         this.name = 'MissingParamError'
     }
-}
-
+}~
 
 describe('Denuncia Router', () => {
     test('Deve retornar 400 se nenhuma latitude for fornecida.', () => {
