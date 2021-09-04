@@ -1,5 +1,11 @@
 class DenunciaRouter {
     route (httpRequest) {
+        if (!httpRequest || !httpRequest.body) {
+            return {
+                statusCode: 500
+            }
+        }
+
         const { latitude, longitude, nome, cpf, titulo, descricao } = httpRequest.body
         if (!latitude || !longitude || !nome || !cpf || !titulo || !descricao) {
             return {
@@ -98,5 +104,18 @@ describe('Denuncia Router', () => {
         }
         const httpResponse = sut.route(httpRequest)
         expect(httpResponse.statusCode).toBe(400)
+    })
+
+    test('Deve retornar 500 se nenhum httpRequest for fornecido.', () => {
+        const sut = new DenunciaRouter()
+        const httpResponse = sut.route()
+        expect(httpResponse.statusCode).toBe(500)
+    })
+
+    test('Deve retornar 500 se o httpRequest não houver body.', () => {
+        const sut = new DenunciaRouter()
+        const httpRequest = {}
+        const httpResponse = sut.route(httpRequest)
+        expect(httpResponse.statusCode).toBe(500)
     })
 })
