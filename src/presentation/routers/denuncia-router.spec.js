@@ -1,17 +1,50 @@
 class DenunciaRouter {
     route (httpRequest) {
         if (!httpRequest || !httpRequest.body) {
-            return {
-                statusCode: 500
-            }
+            return httpResponse.serverError()
         }
 
         const { latitude, longitude, nome, cpf, titulo, descricao } = httpRequest.body
-        if (!latitude || !longitude || !nome || !cpf || !titulo || !descricao) {
-            return {
-                statusCode: 400
-            }
+        if (!latitude) {
+            return httpResponse.badRequest('latitude')
         }
+        if (!longitude) {
+            return httpResponse.badRequest('longitude')
+        }
+        if (!nome) {
+            return httpResponse.badRequest('nome')
+        }
+        if (!cpf) {
+            return httpResponse.badRequest('cpf')
+        }
+        if (!titulo) {
+            return httpResponse.badRequest('titulo')
+        }
+        if (!descricao) {
+            return httpResponse.badRequest('descricao')
+        }
+    }
+}
+
+class httpResponse {
+    static badRequest(paramName) {
+        return {
+            statusCode: 400,
+            body: new MissingParamError(paramName)
+        }
+    }
+
+    static serverError() {
+        return {
+            statusCode: 500
+        }
+    }
+}
+
+class MissingParamError extends Error {
+    constructor(paramName) {
+        super(`Missing param: ${paramName}`)
+        this.name = 'MissingParamError'
     }
 }
 
@@ -29,6 +62,7 @@ describe('Denuncia Router', () => {
         }
         const httpResponse = sut.route(httpRequest)
         expect(httpResponse.statusCode).toBe(400)
+        expect(httpResponse.body).toEqual(new MissingParamError('latitude'))
     })
 
     test('Deve retornar 400 se nenhuma longitude for fornecida.', () => {
@@ -44,6 +78,7 @@ describe('Denuncia Router', () => {
         }
         const httpResponse = sut.route(httpRequest)
         expect(httpResponse.statusCode).toBe(400)
+        expect(httpResponse.body).toEqual(new MissingParamError('longitude'))
     })
 
     test('Deve retornar 400 se nenhum nome for fornecido.', () => {
@@ -59,6 +94,7 @@ describe('Denuncia Router', () => {
         }
         const httpResponse = sut.route(httpRequest)
         expect(httpResponse.statusCode).toBe(400)
+        expect(httpResponse.body).toEqual(new MissingParamError('nome'))
     })
 
     test('Deve retornar 400 se nenhum cpf for fornecido.', () => {
@@ -74,6 +110,7 @@ describe('Denuncia Router', () => {
         }
         const httpResponse = sut.route(httpRequest)
         expect(httpResponse.statusCode).toBe(400)
+        expect(httpResponse.body).toEqual(new MissingParamError('cpf'))
     })
 
     test('Deve retornar 400 se nenhum titulo for fornecido.', () => {
@@ -89,6 +126,7 @@ describe('Denuncia Router', () => {
         }
         const httpResponse = sut.route(httpRequest)
         expect(httpResponse.statusCode).toBe(400)
+        expect(httpResponse.body).toEqual(new MissingParamError('titulo'))
     })
 
     test('Deve retornar 400 se nenhuma descrição for fornecida.', () => {
@@ -104,6 +142,7 @@ describe('Denuncia Router', () => {
         }
         const httpResponse = sut.route(httpRequest)
         expect(httpResponse.statusCode).toBe(400)
+        expect(httpResponse.body).toEqual(new MissingParamError('descricao'))
     })
 
     test('Deve retornar 500 se nenhum httpRequest for fornecido.', () => {
