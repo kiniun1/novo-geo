@@ -16,12 +16,6 @@
       "jest"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run test:ci"
-    }
-  },
   "author": "",
   "license": "ISC",
   "bugs": {
