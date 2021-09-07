@@ -87,6 +87,7 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 400 se nenhuma descrição for fornecida.', () => {
+    0
     const sut = makeSut()
     const httpRequest = {
       body: {
@@ -113,5 +114,56 @@ describe('Denuncia Router', () => {
     const httpRequest = {}
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('Deve retornar 401 se o cpf houver caracteres não numéricos.', () => {
+    const sut = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: 'any-longitude',
+        latitude: 'any-latitude',
+        nome: 'any-nome',
+        titulo: 'any-titulo',
+        descricao: 'any-descricao',
+        cpf: 'any-invalid-cpf'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(Number(httpRequest.body.cpf)).toBeNaN()
+    expect(httpResponse.statusCode).toBe(401)
+  })
+
+  test('Deve retornar 401 se a longitude houver caracteres não numéricos.', () => {
+    const sut = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: 'any-invalid-longitude',
+        latitude: 'any-latitude',
+        nome: 'any-nome',
+        titulo: 'any-titulo',
+        descricao: 'any-descricao',
+        cpf: 'any-cpf'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(Number(httpRequest.body.longitude)).toBeNaN()
+    expect(httpResponse.statusCode).toBe(401)
+  })
+
+  test('Deve retornar 401 se a latitude houver caracteres não numéricos.', () => {
+    const sut = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: 'any-longitude',
+        latitude: 'any-invalid-latitude',
+        nome: 'any-nome',
+        titulo: 'any-titulo',
+        descricao: 'any-descricao',
+        cpf: 'any-cpf'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(Number(httpRequest.body.latitude)).toBeNaN()
+    expect(httpResponse.statusCode).toBe(401)
   })
 })

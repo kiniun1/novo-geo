@@ -13,4 +13,11 @@ module.exports = class httpResponse {
       statusCode: 500
     }
   }
+
+  static invalidRequest (paramName) {
+    return {
+      statusCode: 401,
+      body: new MissingParamError(paramName)
+    }
+  }
 }

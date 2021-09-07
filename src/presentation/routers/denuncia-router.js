@@ -25,5 +25,14 @@ module.exports = class DenunciaRouter {
     if (!descricao) {
       return httpResponse.badRequest('descricao')
     }
+    if (isNaN(cpf)) {
+      return httpResponse.invalidRequest('cpf')
+    }
+    if (isNaN(latitude)) {
+      return httpResponse.invalidRequest('latitude')
+    }
+    if (isNaN(longitude)) {
+      return httpResponse.invalidRequest('longitude')
+    }
   }
 }
