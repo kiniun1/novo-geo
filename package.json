@@ -7,14 +7,14 @@
     "test": "jest --watchAll",
     "test:staged": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kiniun1/novo-geo.git"
-  },
   "standard": {
     "env": [
       "jest"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiniun1/novo-geo.git"
   },
   "author": "",
   "license": "ISC",

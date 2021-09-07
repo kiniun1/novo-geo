@@ -1,52 +1,5 @@
-class DenunciaRouter {
-  route (httpRequest) {
-    if (!httpRequest || !httpRequest.body) {
-      return httpResponse.serverError()
-    }
-
-    const { latitude, longitude, nome, cpf, titulo, descricao } = httpRequest.body
-    if (!latitude) {
-      return httpResponse.badRequest('latitude')
-    }
-    if (!longitude) {
-      return httpResponse.badRequest('longitude')
-    }
-    if (!nome) {
-      return httpResponse.badRequest('nome')
-    }
-    if (!cpf) {
-      return httpResponse.badRequest('cpf')
-    }
-    if (!titulo) {
-      return httpResponse.badRequest('titulo')
-    }
-    if (!descricao) {
-      return httpResponse.badRequest('descricao')
-    }
-  }
-}
-
-class httpResponse {
-  static badRequest (paramName) {
-    return {
-      statusCode: 400,
-      body: new MissingParamError(paramName)
-    }
-  }
-
-  static serverError () {
-    return {
-      statusCode: 500
-    }
-  }
-}
-
-class MissingParamError extends Error {
-  constructor (paramName) {
-    super(`Missing param: ${paramName}`)
-    this.name = 'MissingParamError'
-  }
-}
+const DenunciaRouter = require('./denuncia-router')
+const MissingParamError = require('../helpers/missing-param-error')
 
 describe('Denuncia Router', () => {
   test('Deve retornar 400 se nenhuma latitude for fornecida.', () => {
