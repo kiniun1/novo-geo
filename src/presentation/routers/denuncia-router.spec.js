@@ -1,9 +1,13 @@
 const DenunciaRouter = require('./denuncia-router')
 const MissingParamError = require('../helpers/missing-param-error')
 
+const makeSut = () => {
+  return new DenunciaRouter()
+}
+
 describe('Denuncia Router', () => {
   test('Deve retornar 400 se nenhuma latitude for fornecida.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -19,7 +23,7 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 400 se nenhuma longitude for fornecida.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         latitude: 'any-latitude',
@@ -35,7 +39,7 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 400 se nenhum nome for fornecido.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -51,7 +55,7 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 400 se nenhum cpf for fornecido.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -67,7 +71,7 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 400 se nenhum titulo for fornecido.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -83,7 +87,7 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 400 se nenhuma descrição for fornecida.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -99,13 +103,13 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 500 se nenhum httpRequest for fornecido.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpResponse = sut.route()
     expect(httpResponse.statusCode).toBe(500)
   })
 
   test('Deve retornar 500 se o httpRequest não houver body.', () => {
-    const sut = new DenunciaRouter()
+    const sut = makeSut()
     const httpRequest = {}
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
