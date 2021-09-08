@@ -1,3 +1,4 @@
+const InvalidParamError = require('./invalid-param-error')
 const MissingParamError = require('./missing-param-error')
 
 module.exports = class httpResponse {
@@ -16,8 +17,8 @@ module.exports = class httpResponse {
 
   static invalidRequest (paramName) {
     return {
-      statusCode: 401,
-      body: new MissingParamError(paramName)
+      statusCode: 400,
+      body: new InvalidParamError(paramName)
     }
   }
 }

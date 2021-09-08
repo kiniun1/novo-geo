@@ -116,7 +116,7 @@ describe('Denuncia Router', () => {
     expect(httpResponse.statusCode).toBe(500)
   })
 
-  test('Deve retornar 401 se o cpf houver caracteres não numéricos.', () => {
+  test('Deve retornar 400 se o cpf houver caracteres não numéricos.', () => {
     const sut = makeSut()
     const httpRequest = {
       body: {
@@ -130,10 +130,10 @@ describe('Denuncia Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.cpf)).toBeNaN()
-    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.statusCode).toBe(400)
   })
 
-  test('Deve retornar 401 se a longitude houver caracteres não numéricos.', () => {
+  test('Deve retornar 400 se a longitude houver caracteres não numéricos.', () => {
     const sut = makeSut()
     const httpRequest = {
       body: {
@@ -147,10 +147,10 @@ describe('Denuncia Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.longitude)).toBeNaN()
-    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.statusCode).toBe(400)
   })
 
-  test('Deve retornar 401 se a latitude houver caracteres não numéricos.', () => {
+  test('Deve retornar 400 se a latitude houver caracteres não numéricos.', () => {
     const sut = makeSut()
     const httpRequest = {
       body: {
@@ -164,6 +164,6 @@ describe('Denuncia Router', () => {
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.latitude)).toBeNaN()
-    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.statusCode).toBe(400)
   })
 })
