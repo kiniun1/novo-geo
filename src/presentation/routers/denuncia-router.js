@@ -1,6 +1,10 @@
 const httpResponse = require('../helpers/http-response')
 
 module.exports = class DenunciaRouter {
+  constructor (cpfValidator) {
+    this.cpfValidator = cpfValidator
+  }
+
   route (httpRequest) {
     try {
       const { latitude, longitude, nome, cpf, titulo, descricao } = httpRequest.body
@@ -39,6 +43,7 @@ module.exports = class DenunciaRouter {
       }
       return httpResponse.ok()
     } catch (error) {
+      // console.error(error) botar um logger aqui e trocar
       return httpResponse.serverError()
     }
   }
