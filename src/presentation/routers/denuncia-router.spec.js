@@ -89,7 +89,6 @@ describe('Denuncia Router', () => {
   })
 
   test('Deve retornar 400 se nenhuma descrição for fornecida.', () => {
-    0
     const sut = makeSut()
     const httpRequest = {
       body: {
@@ -225,7 +224,9 @@ describe('Denuncia Router', () => {
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
   })
-  
-
-  
 })
+
+
+
+
+
