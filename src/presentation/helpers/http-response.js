@@ -21,4 +21,10 @@ module.exports = class httpResponse {
       body: new InvalidParamError(paramName)
     }
   }
+
+  static ok () {
+    return {
+      statusCode: 200
+    }
+  }
 }

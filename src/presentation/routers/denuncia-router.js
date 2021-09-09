@@ -34,5 +34,6 @@ module.exports = class DenunciaRouter {
     if (isNaN(longitude)) {
       return httpResponse.invalidRequest('longitude')
     }
+    return httpResponse.ok()
   }
 }

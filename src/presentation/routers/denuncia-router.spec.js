@@ -166,4 +166,54 @@ describe('Denuncia Router', () => {
     expect(Number(httpRequest.body.latitude)).toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
   })
+
+  test('Deve retornar 400 se o nome houver somente caracteres numéricos.', () => {
+    const sut = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: 'any-longitude',
+        latitude: 'any-invalid-latitude',
+        nome: '84654688',
+        titulo: 'any-titulo',
+        descricao: 'any-descricao',
+        cpf: 'any-cpf'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(Number(httpRequest.body.nome)).not.toBeNaN()
+    expect(httpResponse.statusCode).toBe(400)
+  })
+
+  test('Deve retornar 400 se a descrição houver somente caracteres numéricos.', () => {
+    const sut = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: 'any-longitude',
+        latitude: 'any-invalid-latitude',
+        nome: 'any-nome',
+        titulo: 'any-titulo',
+        descricao: '84654688',
+        cpf: 'any-cpf'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(Number(httpRequest.body.descricao)).not.toBeNaN()
+    expect(httpResponse.statusCode).toBe(400)
+  })
+
+  test('Deve retornar 200 se os parametros fornecidos forem válidos.', () => {
+    const sut = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: '22',
+        latitude: '11',
+        nome: 'valid-nome',
+        titulo: 'valid-titulo',
+        descricao: 'valid-descricao',
+        cpf: '12345678901'
+      }
+    }
+    const httpResponse = sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+  })
 })
