@@ -226,5 +226,4 @@ describe('Denuncia Router', () => {
     expect(httpResponse.statusCode).toBe(200)
   })
   
-  
 })
