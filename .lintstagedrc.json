@@ -1,3 +1,0 @@
-{
-    "*.js": ["standard --fix", "npx run test:staged", "git add"]
-}

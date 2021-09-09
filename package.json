@@ -10,6 +10,14 @@
   "standard": {
     "env": ["jest"]
   },
+  "lint-staged": {
+    "*.js": ["standard --fix", "npx run test:staged", "git add"]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+  }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kiniun1/novo-geo.git"
