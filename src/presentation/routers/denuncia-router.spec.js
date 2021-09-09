@@ -1,5 +1,7 @@
 const DenunciaRouter = require('./denuncia-router')
 const MissingParamError = require('../helpers/missing-param-error')
+const ServerError = require('../helpers/server-error')
+const InvalidParamError = require('../helpers/invalid-param-error')
 
 const makeSut = () => {
   return new DenunciaRouter()
@@ -107,6 +109,7 @@ describe('Denuncia Router', () => {
     const sut = makeSut()
     const httpResponse = sut.route()
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('Deve retornar 500 se o httpRequest não houver body.', () => {
@@ -114,14 +117,15 @@ describe('Denuncia Router', () => {
     const httpRequest = {}
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('Deve retornar 400 se o cpf houver caracteres não numéricos.', () => {
     const sut = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
-        latitude: 'any-latitude',
+        longitude: '22',
+        latitude: '11',
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
@@ -131,6 +135,7 @@ describe('Denuncia Router', () => {
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.cpf)).toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('cpf'))
   })
 
   test('Deve retornar 400 se a longitude houver caracteres não numéricos.', () => {
@@ -138,67 +143,71 @@ describe('Denuncia Router', () => {
     const httpRequest = {
       body: {
         longitude: 'any-invalid-longitude',
-        latitude: 'any-latitude',
+        latitude: '11',
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
-        cpf: 'any-cpf'
+        cpf: '12345678901'
       }
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.longitude)).toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('longitude'))
   })
 
   test('Deve retornar 400 se a latitude houver caracteres não numéricos.', () => {
     const sut = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
+        longitude: '22',
         latitude: 'any-invalid-latitude',
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
-        cpf: 'any-cpf'
+        cpf: '12345678901'
       }
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.latitude)).toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('latitude'))
   })
 
   test('Deve retornar 400 se o nome houver somente caracteres numéricos.', () => {
     const sut = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
-        latitude: 'any-invalid-latitude',
+        longitude: '22',
+        latitude: '11',
         nome: '84654688',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
-        cpf: 'any-cpf'
+        cpf: '12345678901'
       }
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.nome)).not.toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('nome'))
   })
 
   test('Deve retornar 400 se a descrição houver somente caracteres numéricos.', () => {
     const sut = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
-        latitude: 'any-invalid-latitude',
+        longitude: '22',
+        latitude: '11',
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: '84654688',
-        cpf: 'any-cpf'
+        cpf: '12345678901'
       }
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.descricao)).not.toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('descricao'))
   })
 
   test('Deve retornar 200 se os parametros fornecidos forem válidos.', () => {
