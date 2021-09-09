@@ -1,5 +1,5 @@
 const a () {
     teste(){
-        a = 0
+        a = 5
     }
 }
