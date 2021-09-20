@@ -3,30 +3,30 @@ const MissingParamError = require('./missing-param-error')
 const ServerError = require('./server-error')
 
 module.exports = class httpResponse {
-  static badRequest (paramName) {
+  static badRequest(paramName) {
     return {
       statusCode: 400,
-      body: new MissingParamError(paramName)
+      body: new MissingParamError(paramName),
     }
   }
 
-  static serverError () {
+  static serverError() {
     return {
       statusCode: 500,
-      body: new ServerError()
+      body: new ServerError(),
     }
   }
 
-  static invalidRequest (paramName) {
+  static invalidRequest(paramName) {
     return {
       statusCode: 400,
-      body: new InvalidParamError(paramName)
+      body: new InvalidParamError(paramName),
     }
   }
 
-  static ok () {
+  static ok() {
     return {
-      statusCode: 200
+      statusCode: 200,
     }
   }
 }
