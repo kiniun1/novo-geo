@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --watchAll --silent --noStackTrace",
     "test:staged": "jest --passWithNoTests --findRelatedTests --silent --noStackTrace",
-    "test:ci": "npm test -- --coverage --silent",
+    "test:ci": "npm test --coverage --silent",
     "prettier": "prettier --write src/**/*.js",
     "prepare": "husky install"
   },
