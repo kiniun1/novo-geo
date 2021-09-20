@@ -7,7 +7,8 @@ module.exports = class DenunciaRouter {
 
   route (httpRequest) {
     try {
-      const { latitude, longitude, nome, cpf, titulo, descricao } = httpRequest.body
+      const { latitude, longitude, nome, cpf, titulo, descricao } =
+        httpRequest.body
       if (!latitude) {
         return httpResponse.badRequest('latitude')
       }
