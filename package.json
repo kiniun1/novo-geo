@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --watchAll --silent --noStackTrace",
     "test:staged": "jest --passWithNoTests --findRelatedTests --silent --noStackTrace",
-    "test:ci": "jest --coverage",
+    "test:ci": "npm test -- --coverage --silent",
     "prettier": "prettier --write src/**/*.js",
     "prepare": "husky install"
   },
@@ -17,7 +17,7 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md}": ["prettier --write", "npm run test:staged", "git add"]
   },
   "repository": {
     "type": "git",

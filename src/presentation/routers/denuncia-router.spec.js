@@ -16,8 +16,8 @@ describe('Denuncia Router', () => {
         nome: 'any-nome',
         cpf: 'any-cpf',
         titulo: 'any-titulo',
-        descricao: 'any-descricao'
-      }
+        descricao: 'any-descricao',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -32,8 +32,8 @@ describe('Denuncia Router', () => {
         nome: 'any-nome',
         cpf: 'any-cpf',
         titulo: 'any-titulo',
-        descricao: 'any-descricao'
-      }
+        descricao: 'any-descricao',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -48,8 +48,8 @@ describe('Denuncia Router', () => {
         latitude: 'any-latitude',
         cpf: 'any-cpf',
         titulo: 'any-titulo',
-        descricao: 'any-descricao'
-      }
+        descricao: 'any-descricao',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -64,8 +64,8 @@ describe('Denuncia Router', () => {
         latitude: 'any-latitude',
         nome: 'any-nome',
         titulo: 'any-titulo',
-        descricao: 'any-descricao'
-      }
+        descricao: 'any-descricao',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -80,8 +80,8 @@ describe('Denuncia Router', () => {
         latitude: 'any-latitude',
         nome: 'any-nome',
         cpf: 'any-cpf',
-        descricao: 'any-descricao'
-      }
+        descricao: 'any-descricao',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -96,8 +96,8 @@ describe('Denuncia Router', () => {
         latitude: 'any-latitude',
         nome: 'any-nome',
         cpf: 'any-cpf',
-        titulo: 'any-titulo'
-      }
+        titulo: 'any-titulo',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
@@ -128,8 +128,8 @@ describe('Denuncia Router', () => {
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
-        cpf: 'any-invalid-cpf'
-      }
+        cpf: 'any-invalid-cpf',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.cpf)).toBeNaN()
@@ -146,8 +146,8 @@ describe('Denuncia Router', () => {
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
-        cpf: '12345678901'
-      }
+        cpf: '12345678901',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.longitude)).toBeNaN()
@@ -164,8 +164,8 @@ describe('Denuncia Router', () => {
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
-        cpf: '12345678901'
-      }
+        cpf: '12345678901',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.latitude)).toBeNaN()
@@ -182,8 +182,8 @@ describe('Denuncia Router', () => {
         nome: '84654688',
         titulo: 'any-titulo',
         descricao: 'any-descricao',
-        cpf: '12345678901'
-      }
+        cpf: '12345678901',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.nome)).not.toBeNaN()
@@ -200,8 +200,8 @@ describe('Denuncia Router', () => {
         nome: 'any-nome',
         titulo: 'any-titulo',
         descricao: '84654688',
-        cpf: '12345678901'
-      }
+        cpf: '12345678901',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(Number(httpRequest.body.descricao)).not.toBeNaN()
@@ -218,8 +218,8 @@ describe('Denuncia Router', () => {
         nome: 'valid-nome',
         titulo: 'valid-titulo',
         descricao: 'valid-descricao',
-        cpf: '12345678901'
-      }
+        cpf: '12345678901',
+      },
     }
     const httpResponse = sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
