@@ -1,11 +1,11 @@
 const httpResponse = require('../helpers/http-response')
 
 module.exports = class DenunciaRouter {
-  constructor (cpfValidator) {
+  constructor(cpfValidator) {
     this.cpfValidator = cpfValidator
   }
 
-  route (httpRequest) {
+  route(httpRequest) {
     try {
       const { latitude, longitude, nome, cpf, titulo, descricao } =
         httpRequest.body
