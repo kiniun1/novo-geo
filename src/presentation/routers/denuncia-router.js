@@ -1,5 +1,4 @@
-const InvalidParamError = require('../errors/invalid-param-error')
-const MissingParamError = require('../errors/missing-param-error')
+const { InvalidParamError, MissingParamError } = require('../../utils/errors')
 const httpResponse = require('../helpers/http-response')
 
 module.exports = class DenunciaRouter {
