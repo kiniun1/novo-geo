@@ -1,15 +1,32 @@
 const DenunciaRouter = require('./denuncia-router')
-const MissingParamError = require('../helpers/missing-param-error')
-const ServerError = require('../helpers/server-error')
-const InvalidParamError = require('../helpers/invalid-param-error')
+const MissingParamError = require('../errors/missing-param-error')
+const ServerError = require('../errors/server-error')
+const InvalidParamError = require('../errors/invalid-param-error')
 
 const makeSut = () => {
-  return new DenunciaRouter()
+  const cpfValidatorSpy = makeCpfValidator()
+  const sut = new DenunciaRouter(cpfValidatorSpy)
+  return {
+    sut,
+    cpfValidatorSpy,
+  }
+}
+
+const makeCpfValidator = () => {
+  class CpfValidatorSpy {
+    isValid(cpf) {
+      this.cpf = cpf
+      return this.isCpfValid
+    }
+  }
+  const cpfValidatorSpy = new CpfValidatorSpy()
+  cpfValidatorSpy.isCpfValid = true
+  return cpfValidatorSpy
 }
 
 describe('Denuncia Router', () => {
-  test('Deve retornar 400 se nenhuma latitude for fornecida.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se nenhuma latitude for fornecida.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -19,13 +36,15 @@ describe('Denuncia Router', () => {
         descricao: 'any-descricao',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('latitude'))
+    expect(httpResponse.body.error).toEqual(
+      new MissingParamError('latitude').message
+    )
   })
 
-  test('Deve retornar 400 se nenhuma longitude for fornecida.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se nenhuma longitude for fornecida.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         latitude: 'any-latitude',
@@ -35,13 +54,15 @@ describe('Denuncia Router', () => {
         descricao: 'any-descricao',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('longitude'))
+    expect(httpResponse.body.error).toEqual(
+      new MissingParamError('longitude').message
+    )
   })
 
-  test('Deve retornar 400 se nenhum nome for fornecido.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se nenhum nome for fornecido.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -51,13 +72,15 @@ describe('Denuncia Router', () => {
         descricao: 'any-descricao',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('nome'))
+    expect(httpResponse.body.error).toEqual(
+      new MissingParamError('nome').message
+    )
   })
 
-  test('Deve retornar 400 se nenhum cpf for fornecido.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se nenhum cpf for fornecido.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -67,13 +90,15 @@ describe('Denuncia Router', () => {
         descricao: 'any-descricao',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('cpf'))
+    expect(httpResponse.body.error).toEqual(
+      new MissingParamError('cpf').message
+    )
   })
 
-  test('Deve retornar 400 se nenhum titulo for fornecido.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se nenhum titulo for fornecido.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -83,13 +108,15 @@ describe('Denuncia Router', () => {
         descricao: 'any-descricao',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('titulo'))
+    expect(httpResponse.body.error).toEqual(
+      new MissingParamError('titulo').message
+    )
   })
 
-  test('Deve retornar 400 se nenhuma descrição for fornecida.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se nenhuma descrição for fornecida.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-longitude',
@@ -99,28 +126,30 @@ describe('Denuncia Router', () => {
         titulo: 'any-titulo',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('descricao'))
+    expect(httpResponse.body.error).toEqual(
+      new MissingParamError('descricao').message
+    )
   })
 
-  test('Deve retornar 500 se nenhum httpRequest for fornecido.', () => {
-    const sut = makeSut()
-    const httpResponse = sut.route()
+  test('Deve retornar 500 se nenhum httpRequest for fornecido.', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.route()
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body.error).toBe(new ServerError().message)
   })
 
-  test('Deve retornar 500 se o httpRequest não houver body.', () => {
-    const sut = makeSut()
+  test('Deve retornar 500 se o httpRequest não houver body.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {}
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body.error).toEqual(new ServerError().message)
   })
 
-  test('Deve retornar 400 se o cpf houver caracteres não numéricos.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se o cpf houver caracteres não numéricos.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: '22',
@@ -131,14 +160,16 @@ describe('Denuncia Router', () => {
         cpf: 'any-invalid-cpf',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(Number(httpRequest.body.cpf)).toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('cpf'))
+    expect(httpResponse.body.error).toEqual(
+      new InvalidParamError('cpf').message
+    )
   })
 
-  test('Deve retornar 400 se a longitude houver caracteres não numéricos.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se a longitude houver caracteres não numéricos.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: 'any-invalid-longitude',
@@ -149,14 +180,16 @@ describe('Denuncia Router', () => {
         cpf: '12345678901',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(Number(httpRequest.body.longitude)).toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('longitude'))
+    expect(httpResponse.body.error).toEqual(
+      new InvalidParamError('longitude').message
+    )
   })
 
-  test('Deve retornar 400 se a latitude houver caracteres não numéricos.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se a latitude houver caracteres não numéricos.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: '22',
@@ -167,14 +200,16 @@ describe('Denuncia Router', () => {
         cpf: '12345678901',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(Number(httpRequest.body.latitude)).toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('latitude'))
+    expect(httpResponse.body.error).toEqual(
+      new InvalidParamError('latitude').message
+    )
   })
 
-  test('Deve retornar 400 se o nome houver somente caracteres numéricos.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se o nome houver somente caracteres numéricos.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: '22',
@@ -185,14 +220,14 @@ describe('Denuncia Router', () => {
         cpf: '12345678901',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(Number(httpRequest.body.nome)).not.toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('nome'))
+    expect(httpResponse.body.error).toBe(new InvalidParamError('nome').message)
   })
 
-  test('Deve retornar 400 se a descrição houver somente caracteres numéricos.', () => {
-    const sut = makeSut()
+  test('Deve retornar 400 se a descrição houver somente caracteres numéricos.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: '22',
@@ -203,14 +238,16 @@ describe('Denuncia Router', () => {
         cpf: '12345678901',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(Number(httpRequest.body.descricao)).not.toBeNaN()
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('descricao'))
+    expect(httpResponse.body.error).toBe(
+      new InvalidParamError('descricao').message
+    )
   })
 
-  test('Deve retornar 200 se os parametros fornecidos forem válidos.', () => {
-    const sut = makeSut()
+  test('Deve retornar 200 se os parametros fornecidos forem válidos.', async () => {
+    const { sut } = makeSut()
     const httpRequest = {
       body: {
         longitude: '22',
@@ -221,7 +258,76 @@ describe('Denuncia Router', () => {
         cpf: '12345678901',
       },
     }
-    const httpResponse = sut.route(httpRequest)
+    const httpResponse = await sut.route(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
+  })
+
+  test('Deve chamar o CpfValidator com o cpf correto', async () => {
+    const { sut, cpfValidatorSpy } = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: '22',
+        latitude: '11',
+        nome: 'any-nome',
+        titulo: 'any-titulo',
+        descricao: 'any-descricao',
+        cpf: '12345678901',
+      },
+    }
+    await sut.route(httpRequest)
+    expect(cpfValidatorSpy.cpf).toBe(httpRequest.body.cpf)
+  })
+
+  test('Deve retornar 400 se um cpf inválido for fornecido', async () => {
+    const { sut, cpfValidatorSpy } = makeSut()
+    cpfValidatorSpy.isCpfValid = false
+    const httpRequest = {
+      body: {
+        longitude: '22',
+        latitude: '11',
+        nome: 'any-nome',
+        titulo: 'any-titulo',
+        descricao: 'any-descricao',
+        cpf: '1',
+      },
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body.error).toBe(new InvalidParamError('cpf').message)
+  })
+
+  test('Deve retornar 500 se o CpfValidator não for fornecido', async () => {
+    const sut = new DenunciaRouter()
+    const httpRequest = {
+      body: {
+        longitude: '22',
+        latitude: '11',
+        nome: 'valid-nome',
+        titulo: 'valid-titulo',
+        descricao: 'valid-descricao',
+        cpf: '12345678901',
+      },
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body.error).toEqual(new ServerError().message)
+  })
+
+  test('Deve retornar 500 se CpfValidator não tiver o método isValid', async () => {
+    const sut = new DenunciaRouter({}) // Objeto vazio para representar que o CpfValidator não
+    const httpRequest = {
+      // Não tem o método isValid
+      body: {
+        longitude: '22',
+        latitude: '11',
+        nome: 'valid-nome',
+        titulo: 'valid-titulo',
+        descricao: 'valid-descricao',
+        cpf: '12345678901',
+      },
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body.error).toEqual(new ServerError().message)
   })
 })

@@ -1,26 +1,21 @@
-const InvalidParamError = require('./invalid-param-error')
-const MissingParamError = require('./missing-param-error')
-const ServerError = require('./server-error')
+const ServerError = require('../errors/server-error')
 
 module.exports = class httpResponse {
-  static badRequest(paramName) {
+  static badRequest(error) {
     return {
       statusCode: 400,
-      body: new MissingParamError(paramName),
+      body: {
+        error: error.message,
+      },
     }
   }
 
   static serverError() {
     return {
       statusCode: 500,
-      body: new ServerError(),
-    }
-  }
-
-  static invalidRequest(paramName) {
-    return {
-      statusCode: 400,
-      body: new InvalidParamError(paramName),
+      body: {
+        error: new ServerError().message,
+      },
     }
   }
 
