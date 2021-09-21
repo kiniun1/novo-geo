@@ -24,6 +24,17 @@ const makeCpfValidator = () => {
   return cpfValidatorSpy
 }
 
+const makeCpfValidatorWithError = () => {
+  class CpfValidatorSpy {
+    isValid() {
+      throw new Error()
+    }
+  }
+  const cpfValidatorSpy = new CpfValidatorSpy()
+  cpfValidatorSpy.isCpfValid = true
+  return cpfValidatorSpy
+}
+
 describe('Denuncia Router', () => {
   test('Deve retornar 400 se nenhuma latitude for fornecida.', async () => {
     const { sut } = makeSut()
@@ -317,6 +328,24 @@ describe('Denuncia Router', () => {
     const sut = new DenunciaRouter({}) // Objeto vazio para representar que o CpfValidator não
     const httpRequest = {
       // Não tem o método isValid
+      body: {
+        longitude: '22',
+        latitude: '11',
+        nome: 'valid-nome',
+        titulo: 'valid-titulo',
+        descricao: 'valid-descricao',
+        cpf: '12345678901',
+      },
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body.error).toEqual(new ServerError().message)
+  })
+
+  test('Deve retornar 500 se CpfValidator der um throw', async () => {
+    const cpfValidatorSpy = makeCpfValidatorWithError()
+    const sut = new DenunciaRouter(cpfValidatorSpy)
+    const httpRequest = {
       body: {
         longitude: '22',
         latitude: '11',
