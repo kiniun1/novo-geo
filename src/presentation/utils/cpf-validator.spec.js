@@ -1,4 +1,5 @@
 const cpf = require('cpf-cnpj-validator')
+const { isCpfValid } = require('../../../__mocks__/cpf-cnpj-validator')
 
 class CpfValidator {
   isCpfValid(cpfValor) {
@@ -24,9 +25,9 @@ describe('Cpf Validator', () => {
     expect(isCpfValid).toBe(false)
   })
 
-  /* test('Deve retornar chamar o validator com o cpf correto', () => {
+  test('Deve retornar chamar o validator com o cpf correto', () => {
     const sut = makeSut()
-    sut.isValid('12345678901')
-    expect(cpf.).toBe('12345678901')
-  }) */
+    sut.isCpfValid('12345678901')
+    expect(cpf.cpf).toBe('12345678901')
+  })
 })
