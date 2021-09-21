@@ -1,11 +1,5 @@
+const CpfValidator = require('./cpf-validator')
 const cpf = require('cpf-cnpj-validator')
-const { isCpfValid } = require('../../../__mocks__/cpf-cnpj-validator')
-
-class CpfValidator {
-  isCpfValid(cpfValor) {
-    return cpf.isValid(cpfValor)
-  }
-}
 
 const makeSut = () => {
   return new CpfValidator()
