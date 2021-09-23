@@ -46,7 +46,7 @@ const makeConversorWithError = () => {
   return conversorSpy
 }
 describe('Convertor para JSON', () => {
-  test('O resultado do método de converter deve ser igual ao modelo de resposta.', async () => {
+  test('O resultado do método de converter do ConversorSpy deve ser igual ao modelo de resposta.', async () => {
     const { conversorSpy } = makeSut()
     const httpRequest = {
       body: {
@@ -88,5 +88,25 @@ describe('Convertor para JSON', () => {
     }
     await conversorSpy.convert(httpRequest)
     expect(conversorSpy.data.body.longitude).toEqual(httpRequest.body.longitude)
+  })
+
+  test('O resultado do método de converter do ConversorSpy deve ser igual ao modelo de resposta.', async () => {
+    const { conversor } = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: 'any-longitude',
+        latitude: 'any-latitude',
+      },
+    }
+    const respo = {
+      location: {
+        latLng: {
+          lat: 'any-latitude',
+          lng: 'any-longitude',
+        },
+      },
+    }
+    const latLng = await conversor.convert(httpRequest)
+    expect(latLng).toEqual(respo)
   })
 })
