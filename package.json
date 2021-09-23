@@ -22,7 +22,6 @@
     "*.{js,css,md}": [
       "prettier --write",
       "npm run test:staged",
-      "git add"
     ]
   },
   "repository": {
