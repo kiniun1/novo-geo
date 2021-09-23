@@ -1,23 +1,19 @@
 const { MissingParamError, InvalidParamError } = require('../../utils/errors')
 
 module.exports = class TransformData {
-  async convert(data) {
-    if (!data) {
-      throw new MissingParamError('data')
-    }
-    if (!data.body.latitude) {
+  async convert(latitude, longitude) {
+    if (!latitude) {
       throw new MissingParamError('latitude')
     }
-    if (!data.body.longitude) {
+    if (!longitude) {
       throw new MissingParamError('longitude')
     }
-    if (isNaN(data.body.latitude)) {
+    if (isNaN(latitude)) {
       throw new InvalidParamError('latitude')
     }
-    if (isNaN(data.body.longitude)) {
+    if (isNaN(longitude)) {
       throw new InvalidParamError('longitude')
     }
-    const { latitude, longitude } = data.body
     const latLng = {
       location: {
         latLng: {

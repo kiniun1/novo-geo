@@ -9,10 +9,9 @@ const makeSut = () => {
 
 const makeConversor = () => {
   class ConversorSpy {
-    convert(data) {
-      this.data = data
-      this.latitude = data.body.latitude
-      this.longitude = data.body.longitude
+    convert(latitude, longitude) {
+      this.latitude = latitude
+      this.longitude = longitude
       conversorSpy.latLng = {
         location: {
           latLng: {
@@ -29,15 +28,20 @@ const makeConversor = () => {
   return conversorSpy
 }
 
+const makeConversorWithError = () => {
+  class ConversorSpy {
+    convert() {
+      throw new Error()
+    }
+  }
+  return new ConversorSpy()
+}
+
 describe('Convertor para JSON', () => {
   test('O resultado do método de converter do ConversorSpy deve ser igual ao modelo de resposta.', async () => {
     const { conversorSpy } = makeSut()
-    const httpRequest = {
-      body: {
-        latitude: 11,
-        longitude: 22,
-      },
-    }
+    const latitude = 11
+    const longitude = 22
     const respo = {
       location: {
         latLng: {
@@ -46,42 +50,31 @@ describe('Convertor para JSON', () => {
         },
       },
     }
-    const latLng = await conversorSpy.convert(httpRequest)
+    const latLng = await conversorSpy.convert(latitude, longitude)
     expect(latLng).toEqual(respo)
   })
 
   test('A latitude passada para a instância da classe ConversorSpy deve ser a mesma que a do request.', async () => {
     const { conversorSpy } = makeSut()
-    const httpRequest = {
-      body: {
-        latitude: 11,
-        longitude: 22,
-      },
-    }
-    await conversorSpy.convert(httpRequest)
-    expect(conversorSpy.data.body.latitude).toEqual(httpRequest.body.latitude)
+    const latitude = 11
+    const longitude = 22
+
+    await conversorSpy.convert(latitude, longitude)
+    expect(conversorSpy.latitude).toEqual(latitude)
   })
 
-  test('A latitude passada para a instância da classe ConversorSpy deve ser a mesma que a do request.', async () => {
+  test('A longitude passada para a instância da classe ConversorSpy deve ser a mesma que a do request.', async () => {
     const { conversorSpy } = makeSut()
-    const httpRequest = {
-      body: {
-        latitude: 11,
-        longitude: 22,
-      },
-    }
-    await conversorSpy.convert(httpRequest)
-    expect(conversorSpy.data.body.longitude).toEqual(httpRequest.body.longitude)
+    const latitude = 11
+    const longitude = 22
+    await conversorSpy.convert(latitude, longitude)
+    expect(conversorSpy.longitude).toEqual(longitude)
   })
 
   test('O resultado do método de converter do Conversor deve ser igual ao modelo de resposta.', async () => {
     const { conversor } = makeSut()
-    const httpRequest = {
-      body: {
-        latitude: 11,
-        longitude: 22,
-      },
-    }
+    const latitude = 11
+    const longitude = 22
     const respo = {
       location: {
         latLng: {
@@ -90,59 +83,43 @@ describe('Convertor para JSON', () => {
         },
       },
     }
-    const latLng = await conversor.convert(httpRequest)
+    const latLng = await conversor.convert(latitude, longitude)
     expect(latLng).toEqual(respo)
-  })
-
-  test('Deve fazer um throw se nenhum dado for fornecido', async () => {
-    const { conversor } = makeSut()
-    const promise = conversor.convert()
-    expect(promise).rejects.toThrow(new MissingParamError('data'))
   })
 
   test('Deve fazer um throw se nenhuma latitude for fornecida', async () => {
     const { conversor } = makeSut()
-    const httpRequest = {
-      body: {
-        longitude: 'any-longitude',
-      },
-    }
-    const promise = conversor.convert(httpRequest)
-    expect(promise).rejects.toThrow(new MissingParamError('latitude'))
+    const longitude = 22
+    const invalid = null
+    return expect(conversor.convert(invalid, longitude)).rejects.toEqual(
+      new MissingParamError('latitude')
+    )
   })
 
   test('Deve fazer um throw se nenhuma longitude for fornecida', async () => {
     const { conversor } = makeSut()
-    const httpRequest = {
-      body: {
-        latitude: 'any-latitude',
-      },
-    }
-    const promise = conversor.convert(httpRequest)
-    expect(promise).rejects.toThrow(new MissingParamError('longitude'))
+    const latitude = 11
+    const invalid = null
+    return expect(conversor.convert(latitude, invalid)).rejects.toEqual(
+      new MissingParamError('longitude')
+    )
   })
 
   test('Deve fazer um throw se a latitude fornecida não for um número', async () => {
     const { conversor } = makeSut()
-    const httpRequest = {
-      body: {
-        latitude: 'any-latitude',
-        longitude: 22,
-      },
-    }
-    const promise = conversor.convert(httpRequest)
-    expect(promise).rejects.toThrow(new InvalidParamError('latitude'))
+    const latitude = 'any-latitude'
+    const longitude = 22
+    return expect(conversor.convert(latitude, longitude)).rejects.toEqual(
+      new InvalidParamError('latitude')
+    )
   })
 
   test('Deve fazer um throw se a longitude fornecida não for um número', async () => {
     const { conversor } = makeSut()
-    const httpRequest = {
-      body: {
-        latitude: 11,
-        longitude: 'any-longitude',
-      },
-    }
-    const promise = conversor.convert(httpRequest)
-    expect(promise).rejects.toThrow(new InvalidParamError('longitude'))
+    const latitude = 11
+    const longitude = 'any_longitude'
+    return expect(conversor.convert(latitude, longitude)).rejects.toEqual(
+      new InvalidParamError('longitude')
+    )
   })
 })
