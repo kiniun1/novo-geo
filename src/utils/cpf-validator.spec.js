@@ -28,7 +28,7 @@ describe('Cpf Validator', () => {
 
   test('Deve fazer um throw se não for fornecido um cpf', () => {
     const sut = makeSut()
-    invalid = null
+    const invalid = null
     expect(() => {
       sut.isCpfValid(invalid)
     }).toThrow(new MissingParamError('cpf'))
