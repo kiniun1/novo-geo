@@ -1,4 +1,5 @@
 const Conversor = require('../presentation/helpers/transformBodyToJson')
+const { MissingParamError, InvalidParamError } = require('./errors')
 
 const makeSut = () => {
   const conversorSpy = makeConversor()
@@ -28,37 +29,20 @@ const makeConversor = () => {
   return conversorSpy
 }
 
-const makeConversorWithError = () => {
-  class ConversorSpy {
-    convert() {
-      throw new Error()
-    }
-  }
-  const conversorSpy = new ConversorSpy()
-  conversorSpy.latLng = {
-    location: {
-      latLng: {
-        lat: this.latitude,
-        lng: this.longitude,
-      },
-    },
-  }
-  return conversorSpy
-}
 describe('Convertor para JSON', () => {
   test('O resultado do método de converter do ConversorSpy deve ser igual ao modelo de resposta.', async () => {
     const { conversorSpy } = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
-        latitude: 'any-latitude',
+        latitude: 11,
+        longitude: 22,
       },
     }
     const respo = {
       location: {
         latLng: {
-          lat: 'any-latitude',
-          lng: 'any-longitude',
+          lat: 11,
+          lng: 22,
         },
       },
     }
@@ -70,8 +54,8 @@ describe('Convertor para JSON', () => {
     const { conversorSpy } = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
-        latitude: 'any-latitude',
+        latitude: 11,
+        longitude: 22,
       },
     }
     await conversorSpy.convert(httpRequest)
@@ -82,31 +66,83 @@ describe('Convertor para JSON', () => {
     const { conversorSpy } = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
-        latitude: 'any-latitude',
+        latitude: 11,
+        longitude: 22,
       },
     }
     await conversorSpy.convert(httpRequest)
     expect(conversorSpy.data.body.longitude).toEqual(httpRequest.body.longitude)
   })
 
-  test('O resultado do método de converter do ConversorSpy deve ser igual ao modelo de resposta.', async () => {
+  test('O resultado do método de converter do Conversor deve ser igual ao modelo de resposta.', async () => {
     const { conversor } = makeSut()
     const httpRequest = {
       body: {
-        longitude: 'any-longitude',
-        latitude: 'any-latitude',
+        latitude: 11,
+        longitude: 22,
       },
     }
     const respo = {
       location: {
         latLng: {
-          lat: 'any-latitude',
-          lng: 'any-longitude',
+          lat: 11,
+          lng: 22,
         },
       },
     }
     const latLng = await conversor.convert(httpRequest)
     expect(latLng).toEqual(respo)
+  })
+
+  test('Deve fazer um throw se nenhum dado for fornecido', async () => {
+    const { conversor } = makeSut()
+    const promise = conversor.convert()
+    expect(promise).rejects.toThrow(new MissingParamError('data'))
+  })
+
+  test('Deve fazer um throw se nenhuma latitude for fornecida', async () => {
+    const { conversor } = makeSut()
+    const httpRequest = {
+      body: {
+        longitude: 'any-longitude',
+      },
+    }
+    const promise = conversor.convert(httpRequest)
+    expect(promise).rejects.toThrow(new MissingParamError('latitude'))
+  })
+
+  test('Deve fazer um throw se nenhuma longitude for fornecida', async () => {
+    const { conversor } = makeSut()
+    const httpRequest = {
+      body: {
+        latitude: 'any-latitude',
+      },
+    }
+    const promise = conversor.convert(httpRequest)
+    expect(promise).rejects.toThrow(new MissingParamError('longitude'))
+  })
+
+  test('Deve fazer um throw se a latitude fornecida não for um número', async () => {
+    const { conversor } = makeSut()
+    const httpRequest = {
+      body: {
+        latitude: 'any-latitude',
+        longitude: 22,
+      },
+    }
+    const promise = conversor.convert(httpRequest)
+    expect(promise).rejects.toThrow(new InvalidParamError('latitude'))
+  })
+
+  test('Deve fazer um throw se a longitude fornecida não for um número', async () => {
+    const { conversor } = makeSut()
+    const httpRequest = {
+      body: {
+        latitude: 11,
+        longitude: 'any-longitude',
+      },
+    }
+    const promise = conversor.convert(httpRequest)
+    expect(promise).rejects.toThrow(new InvalidParamError('longitude'))
   })
 })
