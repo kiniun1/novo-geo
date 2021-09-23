@@ -16,7 +16,9 @@
         "no-unused-vars": "off",
         "no-undef": "off",
         "prefer-const": "off",
-        "no-redeclare": "off",
         "no-process-env": "off"
-    }
+    },
+    "globals": {
+        "process": true
+      }
 }
