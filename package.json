@@ -56,6 +56,7 @@
     "cpf-cnpj-validator": "^1.0.3",
     "express": "^4.17.1",
     "got": "^11.8.2",
+    "restify-clients": "^3.1.0",
     "stream": "^0.0.2"
   }
 }
