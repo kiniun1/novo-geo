@@ -1,15 +1,22 @@
 const { MongoClient } = require('mongodb')
+const assert = require('assert')
+
 module.exports = {
-  async connect(uri, dbName) {
+  async connect(uri) {
     this.uri = uri
-    this.dbName = dbName
-    this.client = await MongoClient.connect(uri, {
+
+    this.client = await MongoClient.connect(this.uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    this.db = this.client.db(dbName)
   },
-  async disconnect() {
+  async fechando() {
     await this.client.close()
+  },
+  async pegandoColeções(name) {
+    this.db = this.client.db()
+    this.collection = this.db.collection(name)
+
+    return this.collection
   },
 }
