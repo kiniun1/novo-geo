@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --colors --silent --noStackTrace --passWithNoTests --detectOpenHandles",
+    "test": "jest --colors --silent --noStackTrace --passWithNoTests",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "npm test --findRelatedTests",
     "test:ci": "npm test --coverage",
-    "prettier": "prettier --write src/**/*.js",
+    "prettier": "prettier --write **/src/**/*.js",
     "prepare": "husky install"
   },
   "standard": {
@@ -36,6 +36,7 @@
   "homepage": "https://github.com/kiniun1/novo-geo#readme",
   "devDependencies": {
     "@shelf/jest-mongodb": "^2.1.0",
+    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",

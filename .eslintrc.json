@@ -1,6 +1,7 @@
 {
     "env": {
         "browser": true,
+        "amd": true,
         "node": true,
         "es2021": true,
         "jest":true
@@ -17,9 +18,11 @@
         "no-unused-vars": "off",
         "no-undef": "off",
         "prefer-const": "off",
-        "no-process-env": "off"
+        "jest/no-process-env": "off"
     },
     "globals": {
         "process": true
-      }
+    },
+    "plugins": ["jest"]
+
 }
