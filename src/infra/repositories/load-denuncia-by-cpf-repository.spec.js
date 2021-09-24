@@ -10,8 +10,7 @@ const makeSut = () => {
 
 describe('Inserir Denuncias', () => {
   beforeAll(async () => {
-    rota = 'mongodb://localhost:27017'
-    await MongoHelper.connect(rota)
+    await MongoHelper.connect(process.env.MONGO_URL)
     denunciaModel = await MongoHelper.pegandoColeções('denuncias')
   })
 
