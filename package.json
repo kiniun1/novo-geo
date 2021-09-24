@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --colors --silent --passWithNoTests --detectOpenHandles",
+    "test": "jest --colors --passWithNoTests --detectOpenHandles",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
-    "test:staged": "npm test -- --findRelatedTests",
+    "test:staged": "npm test -- --watch --silent --findRelatedTests",
     "test:ci": "npm test -- --coverage",
     "prettier": "prettier --write src/**/*.js",
     "prepare": "husky install"
