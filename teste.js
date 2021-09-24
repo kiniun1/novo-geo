@@ -1,5 +1,1 @@
-const a () {
-    teste(){
-        a = 5
-    }
-}
+console.log(process.env.MONGO_URL)
