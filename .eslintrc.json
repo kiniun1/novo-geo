@@ -18,7 +18,7 @@
         "no-unused-vars": "off",
         "no-undef": "off",
         "prefer-const": "off",
-        "jest/no-process-env": "off"
+        "node/no-process-env": "off"
     },
     "globals": {
         "process": true
