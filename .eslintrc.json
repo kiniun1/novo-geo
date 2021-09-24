@@ -20,9 +20,6 @@
         "prefer-const": "off",
         "node/no-process-env": "off"
     },
-    "globals": {
-        "process": true
-    },
     "plugins": ["jest"]
 
 }
