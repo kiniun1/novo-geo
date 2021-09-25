@@ -1,4 +1,4 @@
-const MissingParamError = require('../utils/errors/missing-param-error')
+const { MissingParamError, InvalidParamError } = require('../utils/errors')
 
 module.exports = class SaveDenuncia {
   constructor(denunciaModel) {
@@ -46,6 +46,33 @@ module.exports = class SaveDenuncia {
     }
     if (!longitude) {
       throw new MissingParamError('longitude')
+    }
+    if (isNaN(cpf)) {
+      throw new InvalidParamError('cpf')
+    }
+    if (!isNaN(nome)) {
+      throw new InvalidParamError('nome')
+    }
+    if (!isNaN(titulo)) {
+      throw new InvalidParamError('titulo')
+    }
+    if (!isNaN(descricao)) {
+      throw new InvalidParamError('descricao')
+    }
+    if (!isNaN(cidade)) {
+      throw new InvalidParamError('cidade')
+    }
+    if (!isNaN(estado)) {
+      throw new InvalidParamError('estado')
+    }
+    if (!isNaN(pais)) {
+      throw new InvalidParamError('pais')
+    }
+    if (isNaN(latitude)) {
+      throw new InvalidParamError('latitude')
+    }
+    if (isNaN(longitude)) {
+      throw new InvalidParamError('longitude')
     }
     const denunciaDb = await this.denunciaModel.insertOne(denuncia)
     return denunciaDb

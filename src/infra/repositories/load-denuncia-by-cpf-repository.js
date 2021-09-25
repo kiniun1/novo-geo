@@ -1,5 +1,5 @@
 const MongoHelper = require('../helpers/mongo-helper')
-const MissingParamError = require('../../utils/errors/missing-param-error')
+const { MissingParamError, InvalidParamError } = require('../../utils/errors/')
 
 module.exports = class LoadDenunciaByCpfRepository {
   constructor(denunciaModel) {
@@ -12,6 +12,12 @@ module.exports = class LoadDenunciaByCpfRepository {
     }
     if (!titulo) {
       throw new MissingParamError('titulo')
+    }
+    if (isNaN(cpf)) {
+      throw new InvalidParamError('cpf')
+    }
+    if (!isNaN(titulo)) {
+      throw new InvalidParamError('titulo')
     }
     const denunciaModel = await MongoHelper.pegandoColeções('denuncias')
     const denuncia = await denunciaModel.findOne(

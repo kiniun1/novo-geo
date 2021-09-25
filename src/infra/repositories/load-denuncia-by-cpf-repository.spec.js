@@ -1,6 +1,7 @@
 const LoadDenunciaByCpfRepository = require('./load-denuncia-by-cpf-repository')
 const MongoHelper = require('../helpers/mongo-helper')
 const MissingParamError = require('../../utils/errors/missing-param-error')
+const { InvalidParamError } = require('../../utils/errors')
 
 let denunciaModel
 
@@ -58,5 +59,47 @@ describe('Inserir Denuncias', () => {
     const cpf = '12345678909'
     const promise = sut.load(cpf)
     expect(promise).rejects.toThrow(new MissingParamError('titulo'))
+  })
+
+  test('Deve throwar se o cpf não for passado como número', async () => {
+    const sut = makeSut()
+    const fakeDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    await denunciaModel.insertOne(fakeDenuncia)
+    const promise = sut.load('invalid-cpf', 'any-titulo')
+    expect(promise).rejects.toThrow(new InvalidParamError('cpf'))
+  })
+
+  test('Deve throwar se o titulo for passado como número', async () => {
+    const sut = makeSut()
+    const fakeDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    await denunciaModel.insertOne(fakeDenuncia)
+    const promise = sut.load('12345678909', '1')
+    expect(promise).rejects.toThrow(new InvalidParamError('titulo'))
   })
 })

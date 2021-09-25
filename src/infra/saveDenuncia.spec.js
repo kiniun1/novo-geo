@@ -1,6 +1,7 @@
 const SaveDenuncia = require('./save-denuncia')
 const MongoHelper = require('./helpers/mongo-helper')
 const MissingParamError = require('../utils/errors/missing-param-error')
+const { InvalidParamError } = require('../utils/errors')
 let denunciaModel
 
 const makeSut = () => {
@@ -34,8 +35,8 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const teste = await sut.save(mockDenuncia)
     expect(teste).toHaveProperty('insertedId')
@@ -60,7 +61,7 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      longitude: 'any-longitude',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -79,7 +80,7 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
+      latitude: '11',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -97,8 +98,8 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -116,8 +117,8 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -135,8 +136,8 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -154,8 +155,8 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -173,8 +174,8 @@ describe('Inserir Denuncias', () => {
       estado: 'any-estado',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -192,8 +193,8 @@ describe('Inserir Denuncias', () => {
       cidade: 'any-cidade',
       pais: 'any-pais',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
@@ -211,11 +212,191 @@ describe('Inserir Denuncias', () => {
       cidade: 'any-cidade',
       estado: 'any-estado',
       cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      latitude: '11',
+      longitude: '22',
     }
     const sut = makeSut()
     const promise = sut.save(mockDenuncia)
     expect(promise).rejects.toThrow(new MissingParamError('pais'))
+  })
+
+  test('Deve throwar se a latitude for passada como número', async () => {
+    const mockDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: 'invalid-latitude',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('latitude'))
+  })
+
+  test('Deve throwar se a longitude for passada como número', async () => {
+    const mockDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: 'invalid-longitude',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('longitude'))
+  })
+
+  test('Deve throwar se o nome for passado como número', async () => {
+    const mockDenuncia = {
+      nome: 1,
+      cpf: '12345678909',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('nome'))
+  })
+
+  test('Deve throwar se o cpf for passado como número', async () => {
+    const mockDenuncia = {
+      nome: 'any_name',
+      cpf: 'invalid-cpf',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('cpf'))
+  })
+
+  test('Deve throwar se o titulo for passado como número', async () => {
+    const mockDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 1,
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('titulo'))
+  })
+
+  test('Deve throwar se a descricao for passada como número', async () => {
+    const mockDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 1,
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('descricao'))
+  })
+
+  test('Deve throwar se a cidade for passada como número', async () => {
+    const mockDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      cidade: 1,
+      bairro: 'any-bairro',
+      estado: 'any-estado',
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('cidade'))
+  })
+
+  test('Deve throwar se o estado for passado como número', async () => {
+    const mockDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 1,
+      pais: 'any-pais',
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('estado'))
+  })
+
+  test('Deve throwar se o país for passado como número', async () => {
+    const mockDenuncia = {
+      cpf: '12345678909',
+      nome: 'any_name',
+      titulo: 'any-titulo',
+      descricao: 'any_descricao',
+      logradouro: 'any-logradouro',
+      bairro: 'any-bairro',
+      cidade: 'any-cidade',
+      estado: 'any-estado',
+      pais: 2,
+      cep: 'any-cep',
+      latitude: '11',
+      longitude: '22',
+    }
+    const sut = makeSut()
+    const promise = sut.save(mockDenuncia)
+    expect(promise).rejects.toThrow(new InvalidParamError('pais'))
   })
 })
