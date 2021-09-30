@@ -1,7 +1,11 @@
-const { MissingParamError, InvalidParamError } = require('../../utils/errors')
+const { MissingParamError, InvalidParamError } = require('./errors')
 
-module.exports = class TransformData {
-  async convert(latitude, longitude) {
+module.exports = class TransformDataToRevgeocoding {
+  async convert(data) {
+    if (!data) {
+      throw new MissingParamError('data')
+    }
+    const { latitude, longitude } = data
     if (!latitude) {
       throw new MissingParamError('latitude')
     }
