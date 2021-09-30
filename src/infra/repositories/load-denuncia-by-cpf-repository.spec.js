@@ -25,26 +25,40 @@ describe('Inserir Denuncias', () => {
   test('Deve retornar o cpf, nome, titulo e descrição da denuncia gerado pela busca por denuncias registradas naquele cpf e titulo', async () => {
     const sut = makeSut()
     const fakeDenuncia = {
-      cpf: '12345678909',
-      nome: 'any_name',
-      titulo: 'any-titulo',
-      descricao: 'any_descricao',
-      logradouro: 'any-logradouro',
-      bairro: 'any-bairro',
-      cidade: 'any-cidade',
-      estado: 'any-estado',
-      pais: 'any-pais',
-      cep: 'any-cep',
-      latitude: 'any-latitude',
-      longitude: 'any-longitude',
+      data: {
+        latitude: -9.648198,
+        longitude: -35.713458,
+        denunciante: {
+          nome: 'José de Oliveira',
+          cpf: '95761638037',
+        },
+        denuncia: {
+          titulo: 'Esgoto a céu aberto',
+          descricao: 'Existe um esgoto a céu aberto nesta localidade.',
+        },
+        endereco: {
+          logradouro: 'Avenida Dona Constança de Góes Monteiro',
+          bairro: '',
+          cidade: 'Maceió',
+          estado: 'Alagoas',
+          pais: 'BR',
+          cep: '57036-371',
+        },
+      },
     }
     const retorno = await denunciaModel.insertOne(fakeDenuncia)
-    const denuncia = await sut.load('12345678909', 'any-titulo')
+    const denuncia = await sut.load('95761638037', 'Esgoto a céu aberto')
     expect(denuncia).toEqual({
       _id: retorno.insertedId,
-      cpf: fakeDenuncia.cpf,
-      titulo: fakeDenuncia.titulo,
-      descricao: fakeDenuncia.descricao,
+      data: {
+        denunciante: {
+          cpf: fakeDenuncia.data.denunciante.cpf,
+        },
+        denuncia: {
+          titulo: fakeDenuncia.data.denuncia.titulo,
+          descricao: fakeDenuncia.data.denuncia.descricao,
+        },
+      },
     })
   })
 
@@ -64,18 +78,26 @@ describe('Inserir Denuncias', () => {
   test('Deve throwar se o cpf não for passado como número', async () => {
     const sut = makeSut()
     const fakeDenuncia = {
-      cpf: '12345678909',
-      nome: 'any_name',
-      titulo: 'any-titulo',
-      descricao: 'any_descricao',
-      logradouro: 'any-logradouro',
-      bairro: 'any-bairro',
-      cidade: 'any-cidade',
-      estado: 'any-estado',
-      pais: 'any-pais',
-      cep: 'any-cep',
-      latitude: '11',
-      longitude: '22',
+      data: {
+        latitude: -9.648198,
+        longitude: -35.713458,
+        denunciante: {
+          nome: 'José de Oliveira',
+          cpf: '95761638037',
+        },
+        denuncia: {
+          titulo: 'Esgoto a céu aberto',
+          descricao: 'Existe um esgoto a céu aberto nesta localidade.',
+        },
+        endereco: {
+          logradouro: 'Avenida Dona Constança de Góes Monteiro',
+          bairro: '',
+          cidade: 'Maceió',
+          estado: 'Alagoas',
+          pais: 'BR',
+          cep: '57036-371',
+        },
+      },
     }
     await denunciaModel.insertOne(fakeDenuncia)
     const promise = sut.load('invalid-cpf', 'any-titulo')
@@ -85,18 +107,26 @@ describe('Inserir Denuncias', () => {
   test('Deve throwar se o titulo for passado como número', async () => {
     const sut = makeSut()
     const fakeDenuncia = {
-      cpf: '12345678909',
-      nome: 'any_name',
-      titulo: 'any-titulo',
-      descricao: 'any_descricao',
-      logradouro: 'any-logradouro',
-      bairro: 'any-bairro',
-      cidade: 'any-cidade',
-      estado: 'any-estado',
-      pais: 'any-pais',
-      cep: 'any-cep',
-      latitude: '11',
-      longitude: '22',
+      data: {
+        latitude: -9.648198,
+        longitude: -35.713458,
+        denunciante: {
+          nome: 'José de Oliveira',
+          cpf: '95761638037',
+        },
+        denuncia: {
+          titulo: 'Esgoto a céu aberto',
+          descricao: 'Existe um esgoto a céu aberto nesta localidade.',
+        },
+        endereco: {
+          logradouro: 'Avenida Dona Constança de Góes Monteiro',
+          bairro: '',
+          cidade: 'Maceió',
+          estado: 'Alagoas',
+          pais: 'BR',
+          cep: '57036-371',
+        },
+      },
     }
     await denunciaModel.insertOne(fakeDenuncia)
     const promise = sut.load('12345678909', '1')

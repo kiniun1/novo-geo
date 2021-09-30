@@ -22,14 +22,14 @@ module.exports = class LoadDenunciaByCpfRepository {
     const denunciaModel = await MongoHelper.pegandoColeções('denuncias')
     const denuncia = await denunciaModel.findOne(
       {
-        cpf,
-        titulo,
+        'data.denunciante.cpf': cpf,
+        'data.denuncia.titulo': titulo,
       },
       {
         projection: {
-          cpf: 1,
-          titulo: 1,
-          descricao: 1,
+          'data.denunciante.cpf': true,
+          'data.denuncia.titulo': true,
+          'data.denuncia.descricao': true,
         },
       }
     )
