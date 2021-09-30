@@ -9,17 +9,10 @@ module.exports = class SaveDenuncia {
     if (!denuncia) {
       throw new MissingParamError('denuncia')
     }
-    const {
-      cpf,
-      nome,
-      titulo,
-      descricao,
-      cidade,
-      estado,
-      pais,
-      latitude,
-      longitude,
-    } = denuncia
+    const { latitude, longitude } = denuncia.data
+    const { cpf, nome } = denuncia.data.denunciante
+    const { titulo, descricao } = denuncia.data.denuncia
+    const { cidade, estado, pais } = denuncia.data.endereco
     if (!cpf) {
       throw new MissingParamError('cpf')
     }
