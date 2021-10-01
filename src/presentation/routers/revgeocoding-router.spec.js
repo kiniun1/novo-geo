@@ -2,33 +2,6 @@ const { InvalidParamError, MissingParamError } = require('../../utils/errors')
 const ServerError = require('../errors/server-error')
 const RevGeocodingRouter = require('./revgeocoding-router')
 
-/* router.post('/', function(req, res) {
-    const latitude = req.body.latitude
-    const longitude = req.body.longitude
-  const dataStream = got.stream({
-      uri: 'http://www.mapquestapi.com/geocoding/v1/reverse?key=',
-      qs: {
-        api_key: '2CCyxKh9HxmhX0eBctMzNOcPlIuiqcnS',
-        location: 'World of Warcraft: Legion'
-      }
-  });
-  pipeline(dataStream, res, (err) => {
-      if (err) {
-          console.log(err);
-          res.sendStatus(500);
-      }
-  });
-});
-
-const url =
-  'http://www.mapquestapi.com/geocoding/v1/reverse?key=2CCyxKh9HxmhX0eBctMzNOcPlIuiqcnS&location='
-const router = require('express').Router()
-const { response } = require('express')
-const got = require('got')
-const { pipeline } = require('stream')
-
-module.exports = router; */
-
 const makeSut = () => {
   const sut = new RevGeocodingRouter()
   return sut

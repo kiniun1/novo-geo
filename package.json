@@ -59,6 +59,7 @@
   "dependencies": {
     "cpf-cnpj-validator": "^1.0.3",
     "express": "^4.17.1",
+    "fast-glob": "^3.2.7",
     "got": "^11.8.2",
     "mongodb": "^4.1.2",
     "restify-clients": "^3.1.0",
