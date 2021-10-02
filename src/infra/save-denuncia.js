@@ -1,10 +1,7 @@
 const { MissingParamError, InvalidParamError } = require('../utils/errors')
+const MongoHelper = require('./helpers/mongo-helper')
 
 module.exports = class SaveDenuncia {
-  constructor(denunciaModel) {
-    this.denunciaModel = denunciaModel
-  }
-
   async save(denuncia) {
     if (!denuncia) {
       throw new MissingParamError('denuncia')
@@ -67,7 +64,8 @@ module.exports = class SaveDenuncia {
     if (isNaN(longitude)) {
       throw new InvalidParamError('longitude')
     }
-    const denunciaDb = await this.denunciaModel.insertOne(denuncia)
+    const denunciaModel = await MongoHelper.pegandoColeções('denuncias')
+    const denunciaDb = await denunciaModel.insertOne(denuncia)
     return denunciaDb
   }
 }

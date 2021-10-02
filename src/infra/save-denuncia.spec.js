@@ -5,7 +5,7 @@ const { InvalidParamError } = require('../utils/errors')
 let denunciaModel
 
 const makeSut = () => {
-  return new SaveDenuncia(denunciaModel)
+  return new SaveDenuncia()
 }
 
 describe('Inserir Denuncias', () => {

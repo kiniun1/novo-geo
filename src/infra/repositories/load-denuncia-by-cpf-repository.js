@@ -2,10 +2,6 @@ const MongoHelper = require('../helpers/mongo-helper')
 const { MissingParamError, InvalidParamError } = require('../../utils/errors/')
 
 module.exports = class LoadDenunciaByCpfRepository {
-  constructor(denunciaModel) {
-    this.denunciaModel = denunciaModel
-  }
-
   async load(cpf, titulo) {
     if (!cpf) {
       throw new MissingParamError('cpf')
