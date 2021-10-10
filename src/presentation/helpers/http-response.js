@@ -5,7 +5,10 @@ module.exports = class httpResponse {
     return {
       statusCode: 400,
       body: {
-        error: error.message,
+        error: {
+          message: error.message,
+          code: '01',
+        },
       },
     }
   }
@@ -14,7 +17,22 @@ module.exports = class httpResponse {
     return {
       statusCode: 500,
       body: {
-        error: new ServerError().message,
+        error: {
+          message: new ServerError().message,
+          code: '03',
+        },
+      },
+    }
+  }
+
+  static addressNotFound() {
+    return {
+      statusCode: 400,
+      body: {
+        error: {
+          message: 'Endereço não encontrado para essa localidade',
+          code: '02',
+        },
       },
     }
   }

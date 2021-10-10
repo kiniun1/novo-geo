@@ -1,5 +1,4 @@
 const { MongoClient } = require('mongodb')
-const assert = require('assert')
 
 module.exports = {
   async connect(uri) {

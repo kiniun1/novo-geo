@@ -1,5 +1,15 @@
+jest.mock('@fnando/cpf/commonjs', () => ({
+  CpfValid: true,
+  cpf: '',
+
+  isValid(cpf) {
+    this.cpf = cpf
+    return this.CpfValid
+  },
+}))
+
+const cpf = require('@fnando/cpf/commonjs')
 const CpfValidator = require('./cpf-validator')
-const cpf = require('cpf-cnpj-validator')
 const { MissingParamError, InvalidParamError } = require('./errors')
 
 const makeSut = () => {
@@ -9,12 +19,12 @@ const makeSut = () => {
 describe('Cpf Validator', () => {
   test('Deve retornar true se o validador retornar true', () => {
     const sut = makeSut()
-    const isCpfValid = sut.isCpfValid('00000000000')
+    const isCpfValid = sut.isCpfValid('12345678909')
     expect(isCpfValid).toBe(true)
   })
 
   test('Deve retornar false se o validador retornar false', () => {
-    cpf.isCpfValid = false
+    cpf.CpfValid = false
     const sut = makeSut()
     const isCpfValid = sut.isCpfValid('00000000000')
     expect(isCpfValid).toBe(false)
@@ -31,13 +41,13 @@ describe('Cpf Validator', () => {
     const invalid = null
     expect(() => {
       sut.isCpfValid(invalid)
-    }).toThrow(new MissingParamError('cpf'))
+    }).toThrow({ code: '01', message: new MissingParamError('cpf').message })
   })
 
   test('Deve fazer um throw se o cpf fornecido for não numérico', () => {
     const sut = makeSut()
     expect(() => {
       sut.isCpfValid('any-non-number-cpf')
-    }).toThrow(new InvalidParamError('cpf'))
+    }).toThrow({ code: '01', message: new InvalidParamError('cpf').message })
   })
 })

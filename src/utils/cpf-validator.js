@@ -1,4 +1,5 @@
-const cpf = require('cpf-cnpj-validator')
+// const { cpf } = require('cpf-cnpj-validator')
+const cpf = require('@fnando/cpf/commonjs')
 const { MissingParamError, InvalidParamError } = require('./errors')
 
 module.exports = class CpfValidator {
