@@ -1,7 +1,6 @@
 const SaveDenuncia = require('./save-denuncia')
 const MongoHelper = require('./helpers/mongo-helper')
-const MissingParamError = require('../utils/errors/missing-param-error')
-const { InvalidParamError } = require('../utils/errors')
+const { InvalidParamError, MissingParamError } = require('../utils/errors')
 let denunciaModel
 
 const makeSut = () => {

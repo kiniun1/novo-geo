@@ -1,9 +1,9 @@
 module.exports = {
-  isCpfValid: true,
+  CpfValid: true,
   cpf: '',
 
   isValid(cpf) {
     this.cpf = cpf
-    return this.isCpfValid
+    return this.CpfValid
   },
 }

@@ -1,7 +1,6 @@
 const LoadDenunciaByCpfRepository = require('./load-denuncia-by-cpf-repository')
 const MongoHelper = require('../helpers/mongo-helper')
-const MissingParamError = require('../../utils/errors/missing-param-error')
-const { InvalidParamError } = require('../../utils/errors')
+const { InvalidParamError, MissingParamError } = require('../../utils/errors')
 
 let denunciaModel
 
