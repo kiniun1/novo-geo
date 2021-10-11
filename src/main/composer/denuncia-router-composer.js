@@ -1,15 +1,16 @@
+require('dotenv').config()
 const DenunciaRouter = require('../../presentation/routers/denuncia-router')
 const CpfValidator = require('../../utils/cpf-validator')
-const RevGeocodingConversor = require('../../utils/rev-geocoding-conversor')
-const ConversorFormatoFinal = require('../../utils/conversor-formato-final')
-
-const revGeocodingConversor = new RevGeocodingConversor()
-const conversorFormatoFinal = new ConversorFormatoFinal()
+const SaveDenuncia = require('../../infra/save-denuncia')
+const RevGeocoding = require('../../utils/rev-geocoding')
 const cpfValidator = new CpfValidator()
-const denunciaRouter = new DenunciaRouter(cpfValidator)
+const saveDenuncia = new SaveDenuncia()
+const revGeocoding = new RevGeocoding()
 
-module.exports = {
-  denunciaRouter,
-  revGeocodingConversor,
-  conversorFormatoFinal,
-}
+const denunciaRouter = new DenunciaRouter({
+  cpfValidator,
+  saveDenuncia,
+  revGeocoding,
+})
+
+module.exports = denunciaRouter
