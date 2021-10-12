@@ -3,6 +3,3 @@ node_modules
 coverage
 globalConfig.json
 .env
-GeoDenunciaRequestEx.json
-GeoDenunciaResponseEx.json
-RevGeocodingResponseEx.json
