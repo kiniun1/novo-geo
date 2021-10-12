@@ -1,6 +1,6 @@
 node_modules
+.husky
 .eslintcache
 coverage
 globalConfig.json
 .env
-.husky
