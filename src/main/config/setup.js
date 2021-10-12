@@ -1,5 +1,5 @@
 const cors = require('../middlewares/cors')
-const jsonParser = require('../middlewares/json.parser')
+const jsonParser = require('../middlewares/json-parser')
 const contentType = require('../middlewares/content-type')
 
 module.exports = (app) => {

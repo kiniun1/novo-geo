@@ -1,4 +1,3 @@
-require('dotenv').config()
 const DenunciaRouter = require('../../presentation/routers/denuncia-router')
 const CpfValidator = require('../../utils/cpf-validator')
 const SaveDenuncia = require('../../infra/save-denuncia')
