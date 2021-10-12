@@ -1,6 +1,5 @@
 jest.mock('@fnando/cpf/commonjs', () => ({
   CpfValid: true,
-  cpf: '',
 
   isValid(cpf) {
     this.cpf = cpf
