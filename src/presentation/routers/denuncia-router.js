@@ -2,14 +2,16 @@ const { InvalidParamError, MissingParamError } = require('../../utils/errors')
 const httpResponse = require('../helpers/http-response')
 
 module.exports = class DenunciaRouter {
-  constructor({ cpfValidator, revGeocoding, saveDenuncia } = {}) {
+  constructor({ cpfValidator, revGeocoding, saveDenuncia, cache } = {}) {
     this.cpfValidator = cpfValidator
     this.revGeocoding = revGeocoding
     this.saveDenuncia = saveDenuncia
+    this.cache = cache
   }
 
   async route(httpRequest) {
     try {
+      let respEndereco
       if (!httpRequest.body.latitude) {
         return httpResponse.badRequest(new MissingParamError('latitude'))
       }
@@ -49,19 +51,29 @@ module.exports = class DenunciaRouter {
       const { latitude, longitude } = httpRequest.body
       const { nome, cpf } = httpRequest.body.denunciante
       const { titulo, descricao } = httpRequest.body.denuncia
-      // AQUI IF PARA VER SE EXISTE A LATITUDE E LONGITUDE NO CACHE, SE NÃO TIVER PROCEDER PARA O ABAIXO, SE EXISTIR BUSCAR NO CACHE
-      const url = `http://www.mapquestapi.com/geocoding/v1/reverse?key=${process.env.API_KEY}&location=${latitude},${longitude}`
-      const resultRevGeocoding = await this.revGeocoding.getLocation(url)
-      if (resultRevGeocoding.results[0].locations.length === 0) {
+      const chave = `latitude:${latitude},longitude:${longitude}`
+      const respCache = await this.cache.get(chave)
+      if (respCache) {
+        respEndereco = respCache
+      }
+      if (respCache === null) {
+        const resultRevGeocoding = await this.revGeocoding.getLocation(
+          latitude,
+          longitude
+        )
+        respEndereco = resultRevGeocoding.data
+        this.cache.set(chave, respEndereco, 600)
+      }
+      if (respEndereco.results[0].locations.length === 0) {
         return httpResponse.addressNotFound()
       }
-      if (!resultRevGeocoding.results[0].locations[0].adminArea5) {
+      if (!respEndereco.results[0].locations[0].adminArea5) {
         return httpResponse.addressNotFound()
       }
-      if (!resultRevGeocoding.results[0].locations[0].adminArea3) {
+      if (!respEndereco.results[0].locations[0].adminArea3) {
         return httpResponse.addressNotFound()
       }
-      if (!resultRevGeocoding.results[0].locations[0].adminArea1) {
+      if (!respEndereco.results[0].locations[0].adminArea1) {
         return httpResponse.addressNotFound()
       }
       const obj = {
@@ -77,15 +89,16 @@ module.exports = class DenunciaRouter {
             descricao: descricao,
           },
           endereco: {
-            logradouro: resultRevGeocoding.results[0].locations[0].street,
-            bairro: resultRevGeocoding.results[0].locations[0].adminArea6,
-            cidade: resultRevGeocoding.results[0].locations[0].adminArea5,
-            estado: resultRevGeocoding.results[0].locations[0].adminArea3,
-            pais: resultRevGeocoding.results[0].locations[0].adminArea1,
-            cep: resultRevGeocoding.results[0].locations[0].postalCode,
+            logradouro: respEndereco.results[0].locations[0].street,
+            bairro: respEndereco.results[0].locations[0].adminArea6,
+            cidade: respEndereco.results[0].locations[0].adminArea5,
+            estado: respEndereco.results[0].locations[0].adminArea3,
+            pais: respEndereco.results[0].locations[0].adminArea1,
+            cep: respEndereco.results[0].locations[0].postalCode,
           },
         },
       }
+      this.cache.disconnect()
       const resultSave = await this.saveDenuncia.save(obj) // aqui salvar no banco e botar httpresponse o retorno da inserção
       // console.log(resultSave)
       return httpResponse.ok()
