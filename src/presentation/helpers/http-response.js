@@ -37,9 +37,15 @@ module.exports = class httpResponse {
     }
   }
 
-  static ok() {
+  static ok(denuncia, id) {
     return {
       statusCode: 200,
+      body: {
+        data: {
+          id,
+          denuncia,
+        },
+      },
     }
   }
 }
