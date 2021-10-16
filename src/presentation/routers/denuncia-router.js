@@ -2,11 +2,18 @@ const { InvalidParamError, MissingParamError } = require('../../utils/errors')
 const httpResponse = require('../helpers/http-response')
 
 module.exports = class DenunciaRouter {
-  constructor({ cpfValidator, revGeocoding, saveDenuncia, cache } = {}) {
+  constructor({
+    cpfValidator,
+    revGeocoding,
+    saveDenuncia,
+    cache,
+    saveId,
+  } = {}) {
     this.cpfValidator = cpfValidator
     this.revGeocoding = revGeocoding
     this.saveDenuncia = saveDenuncia
     this.cache = cache
+    this.saveId = saveId
   }
 
   async route(httpRequest) {
@@ -48,6 +55,7 @@ module.exports = class DenunciaRouter {
       if (!isNaN(httpRequest.body.denuncia.descricao)) {
         return httpResponse.badRequest(new InvalidParamError('descricao'))
       }
+      await this.cache.connect()
       const { latitude, longitude } = httpRequest.body
       const { nome, cpf } = httpRequest.body.denunciante
       const { titulo, descricao } = httpRequest.body.denuncia
@@ -99,9 +107,10 @@ module.exports = class DenunciaRouter {
         },
       }
       this.cache.disconnect()
-      const resultSave = await this.saveDenuncia.save(obj) // aqui salvar no banco e botar httpresponse o retorno da inserção
-      // console.log(resultSave)
-      return httpResponse.ok()
+      const id = await this.saveId.getId()
+      await this.saveId.getNextSequence('userid')
+      const resultSave = await this.saveDenuncia.save(obj, id)
+      return httpResponse.ok(obj.data, resultSave.insertedId)
     } catch (error) {
       // console.error(error) //botar um logger aqui e trocar
       return httpResponse.serverError()

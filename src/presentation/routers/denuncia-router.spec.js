@@ -22,11 +22,13 @@ const makeSut = () => {
   const revGeocodingSpy = makeRevGeocoding()
   const saveDenunciaSpy = makeSaveDenuncia()
   const cacheSpy = makeCache()
+  const saveIdSpy = makeSaveId()
   const sut = new DenunciaRouter({
     cpfValidator: cpfValidatorSpy,
     revGeocoding: revGeocodingSpy,
     saveDenuncia: saveDenunciaSpy,
     cache: cacheSpy,
+    saveId: saveIdSpy,
   })
   return {
     sut,
@@ -34,6 +36,7 @@ const makeSut = () => {
     revGeocodingSpy,
     saveDenunciaSpy,
     cacheSpy,
+    saveIdSpy,
   }
 }
 
@@ -48,17 +51,15 @@ const makeCache = () => {
       this.chave = chave
       this.valor = valor
       this.tempExp = tempExp
-      
     }
 
     del(chave) {
       this.chave = chave
-      
     }
 
-    disconnect() {
-      
-    }
+    disconnect() {}
+
+    connect() {}
   }
   const cacheSpy = new CacheSpy()
   cacheSpy.valor = null
@@ -109,11 +110,15 @@ const makeCpfValidatorWithError = () => {
 
 const makeSaveDenuncia = () => {
   class SaveDenunciaSpy {
-    async save(denuncia) {
+    async save(denuncia, id) {
       this.denunciante = denuncia
+      this.id = id
+      return this.id
     }
   }
-  return new SaveDenunciaSpy()
+  const saveDenunciaSpy = new SaveDenunciaSpy()
+  saveDenunciaSpy.id = 1
+  return saveDenunciaSpy
 }
 
 const makeSaveDenunciaWithError = () => {
@@ -159,6 +164,34 @@ const makeRevGeocodingWithError = () => {
     }
   }
   return new RevGeocodingSpy()
+}
+
+const makeSaveId = () => {
+  class SaveIdSpy {
+    async getId() {
+      return this.id
+    }
+
+    async getNextSequence(name) {
+      this.name = name
+    }
+  }
+  const saveIdSpy = new SaveIdSpy()
+  saveIdSpy.id = 1
+  return saveIdSpy
+}
+
+const makeSaveIdWithError = () => {
+  class SaveIdSpy {
+    async getId() {
+      throw new Error()
+    }
+
+    async getNextSequence() {
+      throw new Error()
+    }
+  }
+  return new SaveIdSpy()
 }
 
 describe('Denuncia Router', () => {
@@ -507,6 +540,7 @@ describe('Denuncia Router', () => {
     const cpfValidator = makeCpfValidator()
     const revGeocoding = makeRevGeocoding()
     const saveDenuncia = makeSaveDenuncia()
+    const cache = makeCache()
     const suts = [].concat(
       new DenunciaRouter({
         cpfValidator: makeCpfValidatorWithError(),
@@ -525,6 +559,13 @@ describe('Denuncia Router', () => {
         revGeocoding,
         saveDenuncia,
         cache: makeCacheWithError(),
+      }),
+      new DenunciaRouter({
+        cpfValidator,
+        revGeocoding,
+        saveDenuncia,
+        cache,
+        saveId: makeSaveIdWithError(),
       })
     )
     for (const sut of suts) {
@@ -542,6 +583,7 @@ describe('Denuncia Router', () => {
     const cpfValidator = makeCpfValidator()
     const revGeocoding = makeRevGeocoding()
     const saveDenuncia = makeSaveDenuncia()
+    const cache = makeCache()
     const suts = [].concat(
       new DenunciaRouter(),
       new DenunciaRouter({}),
@@ -569,6 +611,13 @@ describe('Denuncia Router', () => {
         revGeocoding,
         saveDenuncia,
         cache: invalid,
+      }),
+      new DenunciaRouter({
+        cpfValidator,
+        revGeocoding,
+        saveDenuncia,
+        cache,
+        saveId: invalid,
       })
     )
     for (const sut of suts) {
