@@ -44,4 +44,8 @@ module.exports = class Cache {
   disconnect() {
     return this.redis.disconnect()
   }
+
+  async connect() {
+    this.redis.connect()
+  }
 }

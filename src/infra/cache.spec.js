@@ -13,6 +13,7 @@ describe('Cache', () => {
       keepAlive: 60,
     })
     sut = new Cache()
+    await sut.connect()
     const chaveGet = 'teste-get'
     const chaveDel = 'teste-del'
     const chaveJson = 'teste-get-json'
