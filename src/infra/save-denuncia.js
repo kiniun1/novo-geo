@@ -1,71 +1,74 @@
+const ServerError = require('../presentation/errors/server-error')
 const { MissingParamError, InvalidParamError } = require('../utils/errors')
 const MongoHelper = require('./helpers/mongo-helper')
 
 module.exports = class SaveDenuncia {
-  async save(denuncia) {
+  async save(denuncia, id) {
     if (!denuncia) {
       throw new MissingParamError('denuncia')
     }
-    const { latitude, longitude } = denuncia.data
-    const { cpf, nome } = denuncia.data.denunciante
-    const { titulo, descricao } = denuncia.data.denuncia
-    const { cidade, estado, pais } = denuncia.data.endereco
-    if (!cpf) {
-      throw new MissingParamError('cpf')
+    if (!id) {
+      throw new MissingParamError('id')
     }
-    if (!nome) {
-      throw new MissingParamError('nome')
-    }
-    if (!titulo) {
-      throw new MissingParamError('titulo')
-    }
-    if (!descricao) {
-      throw new MissingParamError('descricao')
-    }
-    if (!cidade) {
-      throw new MissingParamError('cidade')
-    }
-    if (!estado) {
-      throw new MissingParamError('estado')
-    }
-    if (!pais) {
-      throw new MissingParamError('pais')
-    }
-    if (!latitude) {
+    if (!denuncia.data.latitude) {
       throw new MissingParamError('latitude')
     }
-    if (!longitude) {
+    if (!denuncia.data.longitude) {
       throw new MissingParamError('longitude')
     }
-    if (isNaN(cpf)) {
-      throw new InvalidParamError('cpf')
+    if (!denuncia.data.denunciante.nome) {
+      throw new MissingParamError('nome')
     }
-    if (!isNaN(nome)) {
-      throw new InvalidParamError('nome')
+    if (!denuncia.data.denunciante.cpf) {
+      throw new MissingParamError('cpf')
     }
-    if (!isNaN(titulo)) {
-      throw new InvalidParamError('titulo')
+    if (!denuncia.data.denuncia.titulo) {
+      throw new MissingParamError('titulo')
     }
-    if (!isNaN(descricao)) {
-      throw new InvalidParamError('descricao')
+    if (!denuncia.data.denuncia.descricao) {
+      throw new MissingParamError('descricao')
     }
-    if (!isNaN(cidade)) {
-      throw new InvalidParamError('cidade')
+    if (!denuncia.data.endereco.cidade) {
+      throw new MissingParamError('cidade')
     }
-    if (!isNaN(estado)) {
-      throw new InvalidParamError('estado')
+    if (!denuncia.data.endereco.estado) {
+      throw new MissingParamError('estado')
     }
-    if (!isNaN(pais)) {
-      throw new InvalidParamError('pais')
+    if (!denuncia.data.endereco.pais) {
+      throw new MissingParamError('pais')
     }
-    if (isNaN(latitude)) {
+    if (isNaN(denuncia.data.latitude)) {
       throw new InvalidParamError('latitude')
     }
-    if (isNaN(longitude)) {
+    if (isNaN(denuncia.data.longitude)) {
       throw new InvalidParamError('longitude')
     }
+    if (!isNaN(denuncia.data.denunciante.nome)) {
+      throw new InvalidParamError('nome')
+    }
+    if (isNaN(denuncia.data.denunciante.cpf)) {
+      throw new InvalidParamError('cpf')
+    }
+    if (!isNaN(denuncia.data.denuncia.titulo)) {
+      throw new InvalidParamError('titulo')
+    }
+    if (!isNaN(denuncia.data.denuncia.descricao)) {
+      throw new InvalidParamError('descricao')
+    }
+    if (!isNaN(denuncia.data.endereco.cidade)) {
+      throw new InvalidParamError('cidade')
+    }
+    if (!isNaN(denuncia.data.endereco.estado)) {
+      throw new InvalidParamError('estado')
+    }
+    if (!isNaN(denuncia.data.endereco.pais)) {
+      throw new InvalidParamError('pais')
+    }
     const denunciaModel = await MongoHelper.pegandoColeções('denuncias')
-    const denunciaDb = await denunciaModel.insertOne(denuncia)
+    const denunciaDb = await denunciaModel.insertOne({
+      _id: id,
+      denuncia: denuncia.data,
+    })
     return denunciaDb
   }
 }

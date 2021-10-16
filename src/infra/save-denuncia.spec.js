@@ -23,6 +23,7 @@ describe('Inserir Denuncias', () => {
 
   test('Deve retornar que existe a propriedade insertedId se a inserção pelo método save da classe saveDenuncia no banco de dados foi bem sucedida', async () => {
     const sut = makeSut()
+
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -45,20 +46,23 @@ describe('Inserir Denuncias', () => {
         },
       },
     }
-    const teste = await sut.save(mockDenuncia)
-    expect(teste).toHaveProperty('insertedId')
+    const teste = await sut.save(mockDenuncia, 1)
+    expect(teste.insertedId).toBe(1)
     expect(teste.acknowledged).toBe(true)
   })
 
-  test('Deve throwar se nenhuma denuncia for passada', async () => {
+  test('Deve fazer um throw se nenhuma denuncia for passada', async () => {
     const sut = makeSut()
     const promise = sut.save()
     expect(promise).rejects.toThrow(new MissingParamError('denuncia'))
   })
 
-  test('Deve throwar se nenhuma latitude for passada', async () => {
+  test('Deve fazer um throw se o id não for passado para o método save', async () => {
+    const sut = makeSut()
+    const invalid = null
     const mockDenuncia = {
       data: {
+        latitude: -9.648198,
         longitude: -35.713458,
         denunciante: {
           nome: 'José de Oliveira',
@@ -78,66 +82,44 @@ describe('Inserir Denuncias', () => {
         },
       },
     }
+    const promise = sut.save(mockDenuncia, invalid)
+    expect(promise).rejects.toThrow(new MissingParamError('id'))
+  })
+
+  test('Deve fazer um throw se nenhuma latitude for passada', async () => {
+    const mockDenuncia = {
+      data: {},
+    }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('latitude'))
   })
 
-  test('Deve throwar se nenhuma longitude for passada', async () => {
+  test('Deve fazer um throw se nenhuma longitude for passada', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
-        denunciante: {
-          nome: 'José de Oliveira',
-          cpf: '95761638037',
-        },
-        denuncia: {
-          titulo: 'Esgoto a céu aberto',
-          descricao: 'Existe um esgoto a céu aberto nesta localidade.',
-        },
-        endereco: {
-          logradouro: 'Avenida Dona Constança de Góes Monteiro',
-          bairro: '',
-          cidade: 'Maceió',
-          estado: 'Alagoas',
-          pais: 'BR',
-          cep: '57036-371',
-        },
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('longitude'))
   })
 
-  test('Deve throwar se nenhum nome for passado', async () => {
+  test('Deve fazer um throw se nenhum nome for passado', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
         longitude: -35.713458,
-        denunciante: {
-          cpf: '95761638037',
-        },
-        denuncia: {
-          titulo: 'Esgoto a céu aberto',
-          descricao: 'Existe um esgoto a céu aberto nesta localidade.',
-        },
-        endereco: {
-          logradouro: 'Avenida Dona Constança de Góes Monteiro',
-          bairro: '',
-          cidade: 'Maceió',
-          estado: 'Alagoas',
-          pais: 'BR',
-          cep: '57036-371',
-        },
+        denunciante: {},
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('nome'))
   })
 
-  test('Deve throwar se nenhum cpf for passado', async () => {
+  test('Deve fazer um throw se nenhum cpf for passado', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -160,11 +142,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('cpf'))
   })
 
-  test('Deve throwar se nenhum titulo for passado', async () => {
+  test('Deve fazer um throw se nenhum titulo for passado', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -173,25 +155,15 @@ describe('Inserir Denuncias', () => {
           nome: 'José de Oliveira',
           cpf: '95761638037',
         },
-        denuncia: {
-          descricao: 'Existe um esgoto a céu aberto nesta localidade.',
-        },
-        endereco: {
-          logradouro: 'Avenida Dona Constança de Góes Monteiro',
-          bairro: '',
-          cidade: 'Maceió',
-          estado: 'Alagoas',
-          pais: 'BR',
-          cep: '57036-371',
-        },
+        denuncia: {},
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('titulo'))
   })
 
-  test('Deve throwar se nenhuma descricao for passada', async () => {
+  test('Deve fazer um throw se nenhuma descricao for passada', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -203,22 +175,14 @@ describe('Inserir Denuncias', () => {
         denuncia: {
           titulo: 'Esgoto a céu aberto',
         },
-        endereco: {
-          logradouro: 'Avenida Dona Constança de Góes Monteiro',
-          bairro: '',
-          cidade: 'Maceió',
-          estado: 'Alagoas',
-          pais: 'BR',
-          cep: '57036-371',
-        },
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('descricao'))
   })
 
-  test('Deve throwar se nenhuma cidade for passada', async () => {
+  test('Deve fazer um throw se nenhuma cidade for passada', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -241,11 +205,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('cidade'))
   })
 
-  test('Deve throwar se nenhum estado for passado', async () => {
+  test('Deve fazer um throw se nenhum estado for passado', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -268,11 +232,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('estado'))
   })
 
-  test('Deve throwar se nenhum pais for passado', async () => {
+  test('Deve fazer um throw se nenhum pais for passado', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -295,11 +259,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new MissingParamError('pais'))
   })
 
-  test('Deve throwar se a latitude não for passada como número', async () => {
+  test('Deve fazer um throw se a latitude não for passada como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: 'invalid-latitude',
@@ -323,11 +287,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('latitude'))
   })
 
-  test('Deve throwar se a longitude não for passada como número', async () => {
+  test('Deve fazer um throw se a longitude não for passada como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -351,11 +315,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('longitude'))
   })
 
-  test('Deve throwar se o nome for passado como número', async () => {
+  test('Deve fazer um throw se o nome for passado como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -379,11 +343,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('nome'))
   })
 
-  test('Deve throwar se o cpf não for passado como número', async () => {
+  test('Deve fazer um throw se o cpf não for passado como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -407,11 +371,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('cpf'))
   })
 
-  test('Deve throwar se o titulo for passado como número', async () => {
+  test('Deve fazer um throw se o titulo for passado como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -435,11 +399,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('titulo'))
   })
 
-  test('Deve throwar se a descricao for passada como número', async () => {
+  test('Deve fazer um throw se a descricao for passada como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -463,11 +427,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('descricao'))
   })
 
-  test('Deve throwar se a cidade for passada como número', async () => {
+  test('Deve fazer um throw se a cidade for passada como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -491,11 +455,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('cidade'))
   })
 
-  test('Deve throwar se o estado for passado como número', async () => {
+  test('Deve fazer um throw se o estado for passado como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -519,11 +483,11 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('estado'))
   })
 
-  test('Deve throwar se o país for passado como número', async () => {
+  test('Deve fazer um throw se o país for passado como número', async () => {
     const mockDenuncia = {
       data: {
         latitude: -9.648198,
@@ -547,7 +511,7 @@ describe('Inserir Denuncias', () => {
       },
     }
     const sut = makeSut()
-    const promise = sut.save(mockDenuncia)
+    const promise = sut.save(mockDenuncia, 1)
     expect(promise).rejects.toThrow(new InvalidParamError('pais'))
   })
 })
