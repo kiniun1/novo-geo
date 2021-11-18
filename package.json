@@ -10,6 +10,7 @@
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "npm test -- --silent --findRelatedTests",
     "test:ci": "npm test -- --coverage",
+    "test:cov": "npm test -- --silent --ci --coverage --coverageReporters='text' --coverageReporters='text-summary'",
     "prettier": "prettier --write src/**/*.js",
     "prepare": "husky install"
   },
